@@ -60,7 +60,7 @@ public class OrderService {
         if(MM.length()<2)
          MM = '0' + MM ;
 
-        return HH+":"+MM;
+        return HH+':'+MM;
     }
 
     public void deletePartnerById(String partnerId){
