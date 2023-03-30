@@ -30,19 +30,20 @@ public class OrderRepository {
     }
 
     public void addOrderPartnerPair(String orderId, String partnerId) {
-        if (orders.containsKey(orderId) && partnerMap.containsKey(partnerId))
-            orderPartnerMap.put(orderId, partnerId);
+        if (orders.containsKey(orderId) && partnerMap.containsKey(partnerId)) {
+            // orderPartnerMap.put(orderId, partnerId);
 
-        List<String> currentOrders = new ArrayList<>();
-        if (deliveryMap.containsKey(partnerId)) {
-            currentOrders = deliveryMap.get(partnerId);
+            List<String> currentOrders = new ArrayList<>();
+            if (deliveryMap.containsKey(partnerId)) {
+                currentOrders = deliveryMap.get(partnerId);
+            }
+            currentOrders.add(orderId);
+            deliveryMap.put(partnerId, currentOrders);
+
+            //update the numbersOfOrders
+            //DeliveryPartner deliveryPartner = partnerMap.get(partnerId);
+            //deliveryPartner.setNumberOfOrders(currentOrders.size());
         }
-        currentOrders.add(orderId);
-        deliveryMap.put(partnerId, currentOrders);
-
-        //update the numbersOfOrders
-        DeliveryPartner deliveryPartner = partnerMap.get(partnerId);
-        deliveryPartner.setNumberOfOrders(currentOrders.size());
     }
 
     public Order getOrderById(String orderId) {
@@ -107,11 +108,21 @@ public class OrderRepository {
     }
 
     public void deletePartnerById(String partnerId) {
-        partnerMap.remove(partnerId);
+
         List<String> listOfOrders = deliveryMap.get(partnerId);
-        deliveryMap.remove(partnerId);
+        //deliveryMap.remove(partnerId);
+        if(deliveryMap.containsKey(partnerId)){
+            listOfOrders = deliveryMap.get(partnerId);
         for (String orderId : listOfOrders) {
+            if(orders.containsKey(orderId))
+                orders.remove(orderId);
+            if(orderPartnerMap.containsKey(orderId))
             orderPartnerMap.remove(orderId);
+        }
+        deliveryMap.remove(partnerId);
+        }
+        if(partnerMap.containsKey(partnerId)){
+            partnerMap.remove(partnerId);
         }
     }
 }
